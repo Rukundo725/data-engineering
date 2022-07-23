@@ -2,6 +2,7 @@
 
 import csv
 import sqlalchemy
+import json
 
 # connect to the database
 engine = sqlalchemy.create_engine("postgresql://codetest:password@database:5432/codetest")
@@ -29,3 +30,17 @@ with open('/data/people.csv') as csv_file:
   for row in reader:
     connection.execute(People.insert().values(given_name = row[0], family_name = row[1], date_of_birth = row[2], place_of_birth = row[3] ))
 
+# output the table to a JSON file
+
+results = ("SELECt people.place_of_birth, places.country, COUNT (people.place_of_birth) AS citizen from People JOIN places on people.place_of_birth = places.city GROUP BY people.place_of_birth, places.country ")
+
+with open('/data/summary_output.json', 'w') as json_file:
+  rows = connection.execute(results).fetchall()
+  data = {}
+
+  for row in rows:
+    if row['country'] in data:
+      data[row['country']] = data[row['country']] + row['citizen']
+    else:
+      data[row['country']] = row['citizen']
+  json.dump(data, json_file, separators=(',', ':'))
