@@ -4,7 +4,7 @@ services:
   database:
     image: postgres
     volumes:
-      - ./example_schema.sql:/docker-entrypoint-initdb.d/example_schema.sql
+      - ./code_test_schema.sql:/docker-entrypoint-initdb.d/code_test_schema.sql
     environment:
       - POSTGRES_DB=codetest
       - POSTGRES_USER=codetest
@@ -23,3 +23,6 @@ services:
     command: ["./main.py"]
     volumes:
       - ./data:/data
+    depends_on:
+      - database
+ 
