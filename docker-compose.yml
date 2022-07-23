@@ -1,0 +1,25 @@
+version: "3.7"
+
+services:
+  database:
+    image: postgres
+    volumes:
+      - ./example_schema.sql:/docker-entrypoint-initdb.d/example_schema.sql
+    environment:
+      - POSTGRES_DB=codetest
+      - POSTGRES_USER=codetest
+      - POSTGRES_PASSWORD=password
+    healthcheck:
+      test: pg_isready -U codetest
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    ports:
+      - 5432:5432
+
+  app:
+    image: app
+    build: src
+    command: ["./main.py"]
+    volumes:
+      - ./data:/data
