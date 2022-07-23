@@ -20,7 +20,7 @@ services:
   app:
     image: app
     build: src
-    command: ["./Load.py"]
+    command: ["./main.py"]
     volumes:
       - ./data:/data
     depends_on:
