@@ -4,7 +4,7 @@ services:
   database:
     image: postgres
     volumes:
-      - ./example_schema.sql:/docker-entrypoint-initdb.d/example_schema.sql
+      - ./code_test_schema.sql:/docker-entrypoint-initdb.d/code_test_schema.sql
     environment:
       - POSTGRES_DB=codetest
       - POSTGRES_USER=codetest
@@ -23,3 +23,21 @@ services:
     command: ["./main.py"]
     volumes:
       - ./data:/data
+    depends_on:
+      - database
+  
+  pgadmin:
+   container_name: pgadmin4_container
+   image: dpage/pgadmin4:5.5
+   restart: always
+   environment:
+     PGADMIN_DEFAULT_EMAIL: admin@admin.com
+     PGADMIN_DEFAULT_PASSWORD: secret
+     PGADMIN_LISTEN_PORT: 80
+   ports:
+     - "8080:80"
+   volumes:
+     - pgadmin-data:/var/lib/pgadmin
+volumes:
+ db-data:
+ pgadmin-data:
