@@ -49,6 +49,20 @@ def summary_output (results):
   except Exception as e:
       print("Error", e) 
 
+
+# output the table to a CSV file
+def csv_summary_output (results):
+  try:
+    with open('/data/summary_output.csv', 'w') as csv_file:
+      rows = connection.execute(results).fetchall()
+      writer = csv.writer(csv_file)
+      for row in rows:
+        writer.writerow(row)
+
+  except Exception as e:
+      print("Error", e) 
+
+
 if __name__ == "__main__":
 
   # make an ORM object to refer to the tables
@@ -64,3 +78,6 @@ if __name__ == "__main__":
 
   #outputing the results in JSON file 
   summary_output(results_query)
+
+  #outputing the results in CSV file 
+  csv_summary_output (results_query)
